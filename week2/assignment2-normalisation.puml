@@ -1,0 +1,65 @@
+@startuml Mechanical Products Normalisation
+
+skinparam linetype ortho
+
+entity "Product" as product {
+    + id : int (PK)
+    ---
+    name : string
+}
+
+entity "Equipment" as equipment {
+    + id : int (PK)
+    ---
+    name : string
+    purchaseDate : date
+    replacementDate : date
+}
+
+entity "EquipmentProduct" as equipmentproduct {
+    + id : int (PK)
+    + equipment_id : int (FK)
+    + product_id : int (FK)
+    ---
+}
+
+entity "ProductManager" as productmanager {
+    + id : int (PK)
+    ---
+    name : string
+    email : string
+}
+
+entity "ProductManagerProduct" as productmanagerproduct {
+    + id : int (PK)
+    + productmanager_id : int (FK)
+    + product_id : int (FK)
+    ---
+}
+
+entity "Supplier" as supplier {
+    + id : int (PK)
+    ---
+    name : string
+    email : string
+    address : string
+    telephone : string (or int)
+}
+
+entity "SupplierProduct" as supplierproduct {
+    + id : int (PK)
+    + supplier_id : int (FK)
+    + product_id : int (FK)
+    ---
+}
+
+product ||--|{ equipmentproduct
+equipment ||--|{ equipmentproduct
+
+product ||--|{ productmanagerproduct
+productmanager ||--|{ productmanagerproduct
+
+equipment ||--|{ supplierproduct
+supplier ||--|{ supplierproduct
+
+@enduml

@@ -1,0 +1,69 @@
+/*
+
+The Customer inserts their card into the ATM.
+The ATM verifies and accepts the card type and reads the card serial number, customer account number and bank sort code.
+The ATM creates a Transaction with the time and date.
+The ATM adds the card details to the Transaction.
+The ATM displays a request for the customer to enter the PIN.
+The Customer enters the PIN into the ATM. The ATM records the PIN entry on the Transaction.
+The ATM contacts the Consortium with the account number, sort code, PIN and card serial number to validate the card.
+The Consortium finds the correct Bank using the sort code and sends the Bank the account number, PIN and card serial number, to validate the card.
+The Bank uses the customer account number to find the correct customer account and sends the Account the PIN and card serial number, to validate the card.
+Finding the account successfully is stored on the Transaction by the Account.
+The Account finds the cash card with the card serial number and sends the Cash Card the PIN. Finding the cash card successfully is stored on the Transaction by the Cash Card.
+The Cash Card checks that the PIN matches its stored PIN.
+Once checked, and the successful match is returned to the ATM.
+The ATM records on the Transaction that the PIN is correct. ATM displays request for customer to choose options withdraw cash, display balance or logout.
+
+*/
+
+@startuml ATM Class Diagram
+
+class ATM {
+    - Transaction currentTransaction
+    + insertCard(Card)
+    + requestPIN()
+    + contactConsortium()
+    + recordPINValidation(bool)
+    + displayOptions()
+}
+
+class Transaction {
+    + DateTime timestamp
+    + CardDetails cardDetails
+    + String pin
+    + bool pinIsValid
+    + recordPIN()
+}
+
+class Card {
+    + String serialNumber
+    + String accountNumber
+    + String bankSortCode
+    + String serialNumber
+    + String pin
+    + checkPIN(String enteredPIN)
+}
+
+class Consortium {
+    + validateCardWithBank(String accountNumber, String sortCode, String pin, String cardSerialNumber)
+}
+
+class Bank {
+    + validateCardWithAccount(String accountNumber, String pin, String cardSerialNumber)
+}
+
+class Account {
+    - List<Card> cards
+    + validateCardWithCashCard(String cardSerialNumber, String pin)
+}
+
+
+ATM --> Transaction : creates
+ATM --> Card : reads
+ATM --> Consortium : contacts
+Consortium --> Bank : forwards validation
+Bank --> Account : finds and validates
+Account --> Card : finds and validates
+
+@enduml

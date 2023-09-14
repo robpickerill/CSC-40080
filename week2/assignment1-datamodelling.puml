@@ -1,0 +1,75 @@
+/*
+
+The Customer inserts their card into the ATM.
+The ATM verifies and accepts the card type and reads the card serial number, customer account number and bank sort code.
+The ATM creates a Transaction with the time and date.
+The ATM adds the card details to the Transaction.
+The ATM displays a request for the customer to enter the PIN.
+The Customer enters the PIN into the ATM. The ATM records the PIN entry on the Transaction.
+The ATM contacts the Consortium with the account number, sort code, PIN and card serial number to validate the card.
+The Consortium finds the correct Bank using the sort code and sends the Bank the account number, PIN and card serial number, to validate the card.
+The Bank uses the customer account number to find the correct customer account and sends the Account the PIN and card serial number, to validate the card.
+Finding the account successfully is stored on the Transaction by the Account.
+The Account finds the cash card with the card serial number and sends the Cash Card the PIN. Finding the cash card successfully is stored on the Transaction by the Cash Card.
+The Cash Card checks that the PIN matches its stored PIN.
+Once checked, and the successful match is returned to the ATM.
+The ATM records on the Transaction that the PIN is correct. ATM displays request for customer to choose options withdraw cash, display balance or logout.
+
+*/
+
+@startuml ATM Relational Diagram
+
+entity "Customer" as customer {
+    + CustomerID : int (PK)
+    ---
+    ...
+}
+
+entity "ATM" as atm {
+    + ATMID : int (PK)
+    ---
+    ...
+}
+
+entity "Card" as card {
+    + CardID : int (PK)
+    ---
+    CustomerID : int (FK)
+    SerialNumber : string
+    AccountNumber : string
+    BankSortCode : string
+    ...
+}
+
+entity "Transaction" as transaction {
+    + TransactionID : int (PK)
+    ---
+    ATMID : int (FK)
+    CardID : int (FK)
+    Timestamp : datetime
+    PinEntry : string
+    ...
+}
+
+entity "Consortium" as consortium {
+    + ConsortiumID : int (PK)
+    ---
+    ...
+}
+
+entity "Bank" as bank {
+    + BankID : int (PK)
+    ---
+    ConsortiumID : int (FK)
+    ...
+}
+
+entity "Account" as account {
+    + AccountID : int (PK)
+    ---
+    BankID : int (FK)
+    Transactions : list<Transaction>
+}
+
+
+@enduml
