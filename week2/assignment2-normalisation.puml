@@ -54,12 +54,12 @@ entity "SupplierProduct" as supplierproduct {
 }
 
 product ||--|{ equipmentproduct
-equipment ||--|{ equipmentproduct
+equipment ||--o{ equipmentproduct
 
 product ||--|{ productmanagerproduct
-productmanager ||--|{ productmanagerproduct
+productmanager ||--o{ productmanagerproduct
 
 equipment ||--|{ supplierproduct
-supplier ||--|{ supplierproduct
+supplier ||--o{ supplierproduct
 
 @enduml
